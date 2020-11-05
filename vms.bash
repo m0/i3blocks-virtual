@@ -8,10 +8,20 @@ function is_installed() {
     fi
 }
 
+unset qemu
 unset vmware
 unset virtualbox
 unset lxc
 unset docker
+
+if is_installed pgrep; then
+    qemu=$(pgrep -c qemu-system)
+    if [[ $qemu != 0 ]]; then
+        qemu="QEMU: $qemu"
+    else
+        unset qemu
+    fi
+fi
 
 if is_installed vmrun; then
     vmware=$(vmrun list | head -n1 | rev | awk {'print $1'})
@@ -51,4 +61,4 @@ if is_installed docker; then
     fi
 fi
 
-echo "$vmware $vbox $lxc $docker" | sed s/\ \ //g | sed s/^\ //
+echo "$qemu $vmware $vbox $lxc $docker" | sed s/\ \ //g | sed s/^\ //
