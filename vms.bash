@@ -8,18 +8,18 @@ function is_installed() {
     fi
 }
 
-unset qemu
+unset vagrant
 unset vmware
 unset virtualbox
 unset lxc
 unset docker
 
-if is_installed pgrep; then
-    qemu=$(pgrep -c qemu-system)
-    if [[ $qemu != 0 ]]; then
-        qemu="QEMU: $qemu"
+if is_installed vagrant; then
+    vagrant=$(vagrant global-status | egrep -c '^[0-9a-z]{7}\s+\w+\s+libvirt\srunning')
+    if [[ $vagrant != 0 ]]; then
+        vagrant="Vagrant: $vagrant"
     else
-        unset qemu
+        unset vagrant
     fi
 fi
 
@@ -61,4 +61,4 @@ if is_installed docker; then
     fi
 fi
 
-echo "$qemu $vmware $vbox $lxc $docker" | sed s/\ \ //g | sed s/^\ //
+echo "$vagrant $vmware $vbox $lxc $docker" | sed s/\ \ //g | sed s/^\ //
